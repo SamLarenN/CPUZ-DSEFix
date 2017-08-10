@@ -2,5 +2,4 @@
 Exploiting CPU-Z Driver To Turn Load Unsigned Drivers
 
 # Credits
-hFireF0x,
-MarkHC
+MarkHC, https://github.com/MarkHC/HandleMaster
