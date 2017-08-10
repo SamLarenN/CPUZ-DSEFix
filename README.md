@@ -2,5 +2,5 @@
 Exploiting CPU-Z Driver To Turn Load Unsigned Drivers
 
 # Credits
-hFireF0x
+hFireF0x,
 MarkHC
