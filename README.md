@@ -1,5 +1,5 @@
 # CPUZ-DSEFix
-Exploiting CPU-Z Driver To Turn Load Unsigned Drivers
+Exploiting CPU-Z Driver To Load Unsigned Drivers.
 
 # Usage
 Enable "Run As Administrator". Drag And Drop Driver Onto It. CPUZ-DSEFix Will Output Necessary Instructions.
