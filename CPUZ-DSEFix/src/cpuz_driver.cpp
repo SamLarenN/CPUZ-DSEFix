@@ -1,7 +1,7 @@
 #include "Global.h"
 
 
-
+/* Load, Register And Ensure That CPU-Z Is Up And Running */
 cpuz_driver::cpuz_driver()
 {
 	auto& utils = Utils::instance();

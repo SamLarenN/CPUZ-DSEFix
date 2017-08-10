@@ -46,14 +46,16 @@ cpuz::~cpuz()
 	CloseHandle(hDevice);
 }
 
+/* CR3 Is The Table Base Of The Process Memory Page */
 BOOLEAN cpuz::ReadCR3()
 {
 	DWORD BytesRet = 0;
-	uint32_t CR = 3;
+	uint32_t CR = 3;		// Read ControlRegister3
 
 	return DeviceIoControl(hDevice, IOCTL_CR, &CR, sizeof(CR), &ControlReg3, sizeof(ControlReg3), &BytesRet, nullptr);
 }
 
+/* Translating Virtual Address To Physical Address, Using a Table Base */
 uint64_t cpuz::TranslateVirtualAddress(uint64_t directoryTableBase, LPVOID virtualAddress)
 {
 	auto va = (uint64_t)virtualAddress;
@@ -123,6 +125,7 @@ uint64_t cpuz::TranslateVirtualAddress(uint64_t directoryTableBase, LPVOID virtu
 	return (PTE & 0xFFFFFFFFFF000) + (va & 0xFFF);
 }
 
+/* Read Physical Address Using CPU-Z */
 BOOLEAN cpuz::ReadPhysicalAddress(uint64_t Address, PVOID buffer, SIZE_T Length)
 {
 	DWORD BytesRet = 0;
@@ -141,15 +144,17 @@ BOOLEAN cpuz::ReadPhysicalAddress(uint64_t Address, PVOID buffer, SIZE_T Length)
 	return DeviceIoControl(hDevice, IOCTL_READ, &in, sizeof(in), &out, sizeof(out), &BytesRet, nullptr);
 }
 
+/* Translate Virtual Address To Physical Using CR3, then Read It */
 BOOLEAN cpuz::ReadSystemAddress(PVOID Address, PVOID buf, SIZE_T len)
 {
 	uint64_t phys = TranslateVirtualAddress(ControlReg3, Address);
 	return ReadPhysicalAddress(phys, buf, len);
 }
 
+/* Write Physical Address Using CPU-Z */
 BOOLEAN cpuz::WritePhysicalAddress(uint64_t Address, PVOID buffer, SIZE_T Length)
 {
-	if (Length % 4 != 0 || Length == 0)
+	if (Length % 4 != 0 || Length == 0)			// Can Only Write Lengths That Are A Multiple Of 4
 		throw std::runtime_error{ "The CPU-Z driver can only write lengths that are aligned to 4 bytes (4, 8, 12, 16, etc)" };
 
 	DWORD BytesRet = 0;
@@ -159,15 +164,18 @@ BOOLEAN cpuz::WritePhysicalAddress(uint64_t Address, PVOID buffer, SIZE_T Length
 	if (Address == 0 || buffer == nullptr)
 		return false;
 
-	if (Length == 4) {
+	if (Length == 4) 
+	{
 		in.dwAddressHigh = HIDWORD(Address);
 		in.dwAddressLow = LODWORD(Address);
 		in.dwVal = *(uint32_t*)buffer;
 
 		return DeviceIoControl(hDevice, IOCTL_WRITE, &in, sizeof(in), &out, sizeof(out), &BytesRet, nullptr);
 	}
-	else {
-		for (auto i = 0; i < Length / 4; i++) {
+	else 
+	{
+		for (auto i = 0; i < Length / 4; i++) 
+		{			// Write Each Multiple
 			in.dwAddressHigh = HIDWORD(Address + 4 * i);
 			in.dwAddressLow = LODWORD(Address + 4 * i);
 			in.dwVal = ((std::uint32_t*)buffer)[i];
@@ -178,6 +186,7 @@ BOOLEAN cpuz::WritePhysicalAddress(uint64_t Address, PVOID buffer, SIZE_T Length
 	}
 }
 
+/* Translate Virtual Address To Physical Using CR3, then Write It */
 BOOLEAN cpuz::WriteSystemAddress(PVOID Address, PVOID buffer, SIZE_T Length)
 {
 	uint64_t phys = TranslateVirtualAddress(ControlReg3, Address);
