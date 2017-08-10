@@ -2,7 +2,10 @@
 Exploiting CPU-Z Driver To Turn Load Unsigned Drivers
 
 # Usage
+Enable "Run As Administrator":
 ![ezgif-2-cfaea52718](https://user-images.githubusercontent.com/25548756/29171024-48daeac8-7ddb-11e7-9e4f-bcc62a820d19.gif)
+Drag And Drop Driver Onto It.
+Will Output Necessary Instructions.
 
 # Credits
 MarkHC, https://github.com/MarkHC/HandleMaster
