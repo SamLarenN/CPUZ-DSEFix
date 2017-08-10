@@ -1,5 +1,7 @@
 # CPUZ-DSEFix
 Exploiting CPU-Z Driver To Load Unsigned Drivers.
+Supports Only x64 OS.
+Windows 7 - Windows 10
 
 # Usage
 Enable "Run As Administrator". Drag And Drop Driver Onto It. CPUZ-DSEFix Will Output Necessary Instructions.
